@@ -75,13 +75,34 @@
 
       QUnit.test("list tests", function (assert) {
           var contacts = Contact.Contacts.instance();
-            while(contacts.hasNext()) {
-                var contact = contacts.next();
+          var last_names = [];
+          var first_names = [];
+          var contactIte = contacts.iterator();
+            while(contactIte.hasNext()) {
+                var cont = contactIte.next();
+                last_names.push(cont.lastName());
+                first_names.push(cont.firstName());
             }
-        assert.ok(false);
+
+            $("#contacts table tbody tr td#cellFirstName").each(function(){
+                if(jQuery.inArray($(this).text(), first_names) === -1) {
+                    assert.ok(false);
+                }
+            })
+
+          $("#contacts table tbody tr td#cellLastName").each(function(){
+              if(jQuery.inArray($(this).text(), last_names) === -1) {
+                  assert.ok(false);
+              }
+          })
+        assert.ok(true);
       });
 
       QUnit.test("first entry tests", function (assert) {
+          var contact = Contact.Contacts.instance();
+          $("#contacts table tbody tr:nth-child(2) td").each(function(){
+              console.log($(this).text());
+          })
         assert.ok(false);
       });
 

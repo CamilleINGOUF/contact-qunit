@@ -2,9 +2,102 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Add Contact</title>
+
+    <link rel="stylesheet" href="css/qunit-2.4.1.css">
+    <link rel="stylesheet" href="css/contact.css">
+    <script src="js/qunit-2.4.1.js"></script>
+    <script src="js/jquery-2.2.4.min.js"></script>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="src/phone.js"></script>
+    <script src="src/mail.js"></script>
+    <script src="src/contact.js"></script>
+    <script src="src/contacts.js"></script>
+    <script src="src/builder.js"></script>
+    <script src="src/contactIterator.js"></script>
+    <script src="src/storage.js"></script>
+
+    <script src="src/view.js"></script>
+    <script src="src/model.js"></script>
+    <script src="src/controller.js"></script>
+
+    <script>
+        var build = function () {
+            var model = new Contact.Model();
+            var view = new Contact.View(model);
+            var controller = new Contact.Controller(model, view);
+        };
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            build();
+
+            $("#submitForm").click(function (event) {
+                event.preventDefault();
+                $("form input").each(function(){
+                    if($(this).val() === "")
+                        return;
+
+                });
+                var contact = new Contact.Builder().createContactWithProfessionalMail(
+                    Contact.Gender.MR, $("#firstname").val(), $("#lastname").val(), $("#mail").val());
+
+                Contact.Contacts.instance().add(contact);
+
+                var contactsIte = Contact.Contacts.instance().iterator();
+                while(contactsIte.hasNext()) {
+                    contact = contactsIte.next();
+                }
+            });
+
+            $("#cancelForm").click(function (event) {
+                event.preventDefault();
+                $("form input").each(function(){
+                   $(this).val("");
+                });
+            });
+        });
+    </script>
+
+    <!-- BEGIN - Les tests -->
+    <script>
+        QUnit.test("add contact test", function (assert) {
+            $("#lastname").val("Mouse");
+            $("#mail").val("test@gmail.com");
+            $("#firstname").val("Mickey");
+
+            $("#submitForm").click();
+            var contacts = Contact.Contacts.instance();
+            assert.ok(contacts.size() === 1);
+
+            var contact = Contact.Contacts.instance().iterator().next();
+            assert.ok(contact.lastName() === "Mouse");
+            assert.ok(contact.firstName() === "Mickey");
+            assert.ok(contact.mails()[0].address() === "test@gmail.com");
+        });
+    </script>
+    <!-- END - Les tests -->
 </head>
 <body>
-
+<div id="form">
+    <form action="/action_page.php">
+        First name:<br>
+        <input type="text" id="firstname" value=""><br>
+        Last name:<br>
+        <input type="text" id="lastname" value=""><br>
+        Mail:<br>
+        <input type="mail" id="mail" value=""><br><br>
+        <button type="submit" id="submitForm">Send</button>
+        <button text="cancel" id="cancelForm">Cancel</button>
+    </form>
+</div>
+<div id="qunit"></div>
 </body>
 </html>

@@ -64,10 +64,20 @@
     <!-- BEGIN - Les tests -->
     <script>
       QUnit.test("header tests", function (assert) {
-        assert.ok(false);
+        var values = ["First name","Last name","Phones","Mails","Tags","Actions"];
+        $("#contacts table tbody tr:first-child th").each(function (){
+            if(jQuery.inArray($(this).text(), values) === -1) {
+                assert.ok(false);
+            }
+          });
+        assert.ok(true);
       });
 
       QUnit.test("list tests", function (assert) {
+          var contacts = Contact.Contacts.instance();
+            while(contacts.hasNext()) {
+                var contact = contacts.next();
+            }
         assert.ok(false);
       });
 

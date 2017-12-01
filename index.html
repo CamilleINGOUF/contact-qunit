@@ -135,10 +135,29 @@
           target.click();
           var target2 = $("#contacts table tbody tr:nth-child(2)");
           assert.ok(target2.find("#cellFirstName").text() !== "Eric");
+          assert.ok($("#contacts table tbody tr").size() === 4);
       });
 
       QUnit.test("sort contact tests", function (assert) {
-        assert.ok(false);
+          var target = $("#contacts > td a");
+          target.click();
+          var contactTab = $("#contacts table tbody tr");
+
+
+          var valid = true;
+          var oldLastName="";
+          var currentLastName = "";
+          contactTab.each(function (i){
+              currentLastName = $(this).find("#cellLastName").text();
+              if(i > 1) {
+                  console.log(currentLastName[0]);
+                    if(currentLastName < oldLastName)
+                        valid = false;
+              }
+              oldLastName = currentLastName;
+          });
+
+          assert.ok(valid);
       });
     </script>
     <!-- END - Les tests -->

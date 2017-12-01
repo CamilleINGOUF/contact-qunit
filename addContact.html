@@ -82,6 +82,16 @@
             assert.ok(contact.firstName() === "Mickey");
             assert.ok(contact.mails()[0].address() === "test@gmail.com");
         });
+
+        QUnit.test("cancel form test", function (assert) {
+            $("#lastname").val("Mouse");
+            $("#mail").val("test@gmail.com");
+            $("#firstname").val("Mickey");
+
+            $("#cancelForm").click();
+            var contacts = Contact.Contacts.instance();
+            assert.ok(contacts.size() === 1);
+        });
     </script>
     <!-- END - Les tests -->
 </head>

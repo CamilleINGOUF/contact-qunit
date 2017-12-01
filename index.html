@@ -99,11 +99,29 @@
       });
 
       QUnit.test("first entry tests", function (assert) {
-          var contact = Contact.Contacts.instance();
-          $("#contacts table tbody tr:nth-child(2) td").each(function(){
-              console.log($(this).text());
+          var contact = Contact.Contacts.instance().getFromName("Eric","RAMAT");
+
+          var target = $("#contacts table tbody tr:nth-child(2)");
+          var cleanPhones = target.find("#cellPhones").text().split("/");
+          $.each(cleanPhones, function(i, item){
+              if(contact.phones()[i].number() !== item.substring(0,10)) {
+                  assert.ok(false);
+              }
           })
-        assert.ok(false);
+
+          var cleanMails = target.find("#cellMails").text().split("/");
+          $.each(cleanMails, function(i, item){
+              var index = item.lastIndexOf("[");
+              if(contact.mails()[i].address() !== item.substr(0,index)) {
+                  assert.ok(false);
+              }
+          })
+
+          var tag = target.find("#cellTags").text();
+          if(tag !== contact.tags()[0])
+              assert.ok(false);
+
+        assert.ok(true);
       });
 
       QUnit.test("remove contact tests", function (assert) {
